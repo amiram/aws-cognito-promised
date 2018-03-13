@@ -1,12 +1,10 @@
 import {
   AuthenticationDetails,
-  CognitoRefreshToken,
-  CognitoUser,
+  CognitoRefreshToken, CognitoUser,
   CognitoUserAttribute,
   CognitoUserSession,
   ICognitoUserAttributeData, MFAOption, NodeCallback,
 } from "amazon-cognito-identity-js";
-import * as cognito from "amazon-cognito-identity-js";
 import {NewPasswordRequiredError} from "./errors/new-password-required-error";
 import {MfaRequiredError} from "./errors/mfa-required-error";
 import {TotpRequiredError} from "./errors/totp-required-error";
@@ -14,11 +12,10 @@ import {CustomChallengeError} from "./errors/custom-challenge-error";
 import {MfaSetupError} from "./errors/mfa-setup-error";
 import {SelectMfaTypeError} from "./errors/select-mfa-type-error";
 import {AuthenticateSuccessResult} from "./authenticate-success-result";
+
 const {promisify} = require("bluebird");
 
-// window["Promise"] = require("bluebird");
-
-export default class CognitoUserWrapper extends cognito.CognitoUser {
+export default class CognitoUserWrapper extends CognitoUser {
 
   /**
    * Constructs a new CognitoUser object
