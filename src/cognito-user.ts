@@ -133,7 +133,7 @@ export default class CognitoUserWrapper extends CognitoUser {
       return;
     }
 
-    return promisify(super.confirmRegistration)(confirmationCode, forceAliasCreation);
+    return promisify(super.confirmRegistration, {context: this})(confirmationCode, forceAliasCreation);
   }
 
   sendCustomChallengeAnswer(answerChallenge: any): Promise<any>;
@@ -155,7 +155,7 @@ export default class CognitoUserWrapper extends CognitoUser {
       return;
     }
 
-    return promisify(super.sendCustomChallengeAnswer)(answerChallenge);
+    return promisify(super.sendCustomChallengeAnswer, {context: this})(answerChallenge);
   }
 
   sendMFACode(confirmationCode: string, callback: null, mfaType: string): Promise<CognitoUserSession>;
@@ -202,7 +202,7 @@ export default class CognitoUserWrapper extends CognitoUser {
       return;
     }
 
-    return promisify(super.changePassword)(oldUserPassword, newUserPassword);
+    return promisify(super.changePassword, {context: this})(oldUserPassword, newUserPassword);
   }
 
   enableMFA(): Promise<string>;
@@ -219,7 +219,7 @@ export default class CognitoUserWrapper extends CognitoUser {
       return;
     }
 
-    return promisify(super.enableMFA)();
+    return promisify(super.enableMFA, {context: this})();
   }
 
   disableMFA(): Promise<string>;
@@ -236,7 +236,7 @@ export default class CognitoUserWrapper extends CognitoUser {
       return;
     }
 
-    return promisify(super.disableMFA)();
+    return promisify(super.disableMFA, {context: this})();
   }
 
   deleteUser(): Promise<string>;
@@ -253,7 +253,7 @@ export default class CognitoUserWrapper extends CognitoUser {
       return;
     }
 
-    return promisify(super.deleteUser)();
+    return promisify(super.deleteUser, {context: this})();
   }
 
   updateAttributes(attributes: ICognitoUserAttributeData[]): Promise<string>;
@@ -274,7 +274,7 @@ export default class CognitoUserWrapper extends CognitoUser {
       return;
     }
 
-    return promisify(super.updateAttributes)(attributes);
+    return promisify(super.updateAttributes, {context: this})(attributes);
   }
 
   getUserAttributes(): Promise<CognitoUserAttribute[]>;
@@ -291,7 +291,7 @@ export default class CognitoUserWrapper extends CognitoUser {
       return;
     }
 
-    return promisify(super.getUserAttributes)();
+    return promisify(super.getUserAttributes, {context: this})();
   }
 
   getMFAOptions(): Promise<MFAOption[]>;
@@ -308,7 +308,7 @@ export default class CognitoUserWrapper extends CognitoUser {
       return;
     }
 
-    return promisify(super.getMFAOptions)();
+    return promisify(super.getMFAOptions, {context: this})();
   }
 
   deleteAttributes(attributeList: string[]): Promise<string>;
@@ -326,7 +326,7 @@ export default class CognitoUserWrapper extends CognitoUser {
       return;
     }
 
-    return promisify(super.deleteAttributes)(attributeList);
+    return promisify(super.deleteAttributes, {context: this})(attributeList);
   }
 
   resendConfirmationCode(): Promise<"SUCCESS">;
@@ -343,7 +343,7 @@ export default class CognitoUserWrapper extends CognitoUser {
       return;
     }
 
-    return promisify(super.resendConfirmationCode)();
+    return promisify(super.resendConfirmationCode, {context: this})();
   }
 
   getSession(): Promise<CognitoUserSession>;
@@ -381,7 +381,7 @@ export default class CognitoUserWrapper extends CognitoUser {
       return;
     }
 
-    return promisify(super.refreshSession)(refreshToken);
+    return promisify(super.refreshSession, {context: this})(refreshToken);
   }
 
   forgotPassword(): Promise<any>;

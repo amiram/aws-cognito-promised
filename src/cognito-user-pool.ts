@@ -47,7 +47,7 @@ export default class CognitoUserPoolWrapper extends CognitoUserPool {
       return;
     }
 
-    return promisify(super.signUp)(username, password, userAttributes, validationData);
+    return promisify(super.signUp, {context: this})(username, password, userAttributes, validationData);
   }
 
   getCurrentUser(): CognitoUserWrapper | null {
