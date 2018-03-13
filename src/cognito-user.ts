@@ -359,7 +359,7 @@ export default class CognitoUserWrapper extends CognitoUser {
   // tslint:disable-next-line
   getSession(callback?) {
     if (callback) {
-      super.getSession(callback);
+      super.getSession.bind(this)(callback);
       return;
     }
 
