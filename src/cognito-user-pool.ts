@@ -53,10 +53,11 @@ export default class CognitoUserPoolWrapper extends CognitoUserPool {
   getCurrentUser(): CognitoUserWrapper | null {
     const currentUser = super.getCurrentUser();
     if (currentUser) {
-      return Object.assign(currentUser, new CognitoUserWrapper({
+      return new CognitoUserWrapper({
         Username: currentUser.getUsername(),
         Pool: this,
-      }));
+        Storage: (this as any).storage,
+      });
     } else {
       return null;
     }
