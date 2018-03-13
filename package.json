@@ -1,8 +1,9 @@
 {
   "name": "aws-cognito-promised",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "",
   "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
   "scripts": {
     "lint": "tslint \"src/**/*.ts\"",
     "build": "tsc",
