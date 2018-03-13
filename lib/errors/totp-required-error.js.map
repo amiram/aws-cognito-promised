@@ -1,0 +1,1 @@
+{"version":3,"file":"totp-required-error.js","sourceRoot":"","sources":["../../src/errors/totp-required-error.ts"],"names":[],"mappings":";;AAAA,uBAA+B,SAAQ,KAAK;IAC1C,YAAmB,aAAkB,EAAS,mBAAwB;QACpE,KAAK,CAAC,eAAe,CAAC,CAAC;QADN,kBAAa,GAAb,aAAa,CAAK;QAAS,wBAAmB,GAAnB,mBAAmB,CAAK;IAEtE,CAAC;CACF;AAJD,8CAIC"}

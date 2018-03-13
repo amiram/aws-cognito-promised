@@ -1,8 +1,5 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const amazon_cognito_identity_js_1 = require("amazon-cognito-identity-js");
-const { promisify } = require("bluebird");
-class CognitoUserPoolWrapper extends amazon_cognito_identity_js_1.CognitoUserPool {
+import { CognitoUserAttribute, CognitoUserPool, ISignUpResult, NodeCallback } from "amazon-cognito-identity-js";
+export default class CognitoUserPoolWrapper extends CognitoUserPool {
     /**
      * Constructs a new CognitoUserPool object
      * @param {object} data Creation options.
@@ -14,9 +11,7 @@ class CognitoUserPoolWrapper extends amazon_cognito_identity_js_1.CognitoUserPoo
      *        to support cognito advanced security features. By default, this
      *        flag is set to true.
      */
-    constructor(data) {
-        super(data);
-    }
+    constructor(data: any);
     /**
      * @typedef {object} SignUpResult
      * @property {CognitoUser} user New user.
@@ -31,13 +26,5 @@ class CognitoUserPoolWrapper extends amazon_cognito_identity_js_1.CognitoUserPoo
      * @param {nodeCallback<SignUpResult>} callback Called on error or with the new user.
      * @returns {void}
      */
-    signUp(username, password, userAttributes, validationData, callback) {
-        if (callback) {
-            super.signUp(username, password, userAttributes, validationData, callback);
-            return;
-        }
-        return promisify(super.signUp)(username, password, userAttributes, validationData);
-    }
+    signUp(username: string, password: string, userAttributes: CognitoUserAttribute[], validationData: CognitoUserAttribute[], callback?: NodeCallback<Error, ISignUpResult>): Promise<ISignUpResult> | void;
 }
-exports.default = CognitoUserPoolWrapper;
-//# sourceMappingURL=cognito-user-pool.js.map

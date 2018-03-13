@@ -1,0 +1,1 @@
+{"version":3,"file":"mfa-setup-error.js","sourceRoot":"","sources":["../../src/errors/mfa-setup-error.ts"],"names":[],"mappings":";;AAAA,mBAA2B,SAAQ,KAAK;IACtC,YAAmB,aAAkB,EAAS,mBAAwB;QACpE,KAAK,CAAC,WAAW,CAAC,CAAC;QADF,kBAAa,GAAb,aAAa,CAAK;QAAS,wBAAmB,GAAnB,mBAAmB,CAAK;IAEtE,CAAC;CACF;AAJD,sCAIC"}

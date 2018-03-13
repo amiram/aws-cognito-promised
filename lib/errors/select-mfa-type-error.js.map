@@ -1,0 +1,1 @@
+{"version":3,"file":"select-mfa-type-error.js","sourceRoot":"","sources":["../../src/errors/select-mfa-type-error.ts"],"names":[],"mappings":";;AAAA,wBAAgC,SAAQ,KAAK;IAC3C,YAAmB,aAAkB,EAAS,mBAAwB;QACpE,KAAK,CAAC,iBAAiB,CAAC,CAAC;QADR,kBAAa,GAAb,aAAa,CAAK;QAAS,wBAAmB,GAAnB,mBAAmB,CAAK;IAEtE,CAAC;CACF;AAJD,gDAIC"}

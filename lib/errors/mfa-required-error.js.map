@@ -1,0 +1,1 @@
+{"version":3,"file":"mfa-required-error.js","sourceRoot":"","sources":["../../src/errors/mfa-required-error.ts"],"names":[],"mappings":";;AAAA,sBAA8B,SAAQ,KAAK;IACzC,YAAmB,aAAkB,EAAS,mBAAwB;QACpE,KAAK,CAAC,cAAc,CAAC,CAAC;QADL,kBAAa,GAAb,aAAa,CAAK;QAAS,wBAAmB,GAAnB,mBAAmB,CAAK;IAEtE,CAAC;CACF;AAJD,4CAIC"}
