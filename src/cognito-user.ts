@@ -28,6 +28,18 @@ export default class CognitoUserWrapper extends CognitoUser {
     super(data);
   }
 
+  public authenticateUser(authDetails: AuthenticationDetails): Promise<AuthenticateSuccessResult>;
+  public authenticateUser(authDetails: AuthenticationDetails, callback: {
+    onSuccess: (session: CognitoUserSession, userConfirmationNecessary?: boolean) => void,
+    onFailure: (err: any) => void,
+    newPasswordRequired?: (userAttributes: any, requiredAttributes: any) => void,
+    mfaRequired?: (challengeName: any, challengeParameters: any) => void,
+    totpRequired?: (challengeName: any, challengeParameters: any) => void,
+    customChallenge?: (challengeParameters: any) => void,
+    mfaSetup?: (challengeName: any, challengeParameters: any) => void,
+    selectMFAType?: (challengeName: any, challengeParameters: any) => void,
+  }): void;
+
   /**
    * This is used for authenticating the user.
    * stuff
@@ -43,16 +55,7 @@ export default class CognitoUserWrapper extends CognitoUser {
    * @param {authSuccess} callback.onSuccess Called on success with the new session.
    * @returns {void}
    */
-  public authenticateUser(authDetails: AuthenticationDetails, callback?: {
-    onSuccess: (session: CognitoUserSession, userConfirmationNecessary?: boolean) => void,
-    onFailure: (err: any) => void,
-    newPasswordRequired?: (userAttributes: any, requiredAttributes: any) => void,
-    mfaRequired?: (challengeName: any, challengeParameters: any) => void,
-    totpRequired?: (challengeName: any, challengeParameters: any) => void,
-    customChallenge?: (challengeParameters: any) => void,
-    mfaSetup?: (challengeName: any, challengeParameters: any) => void,
-    selectMFAType?: (challengeName: any, challengeParameters: any) => void,
-  }): Promise<AuthenticateSuccessResult> | void {
+  public authenticateUser(authDetails: AuthenticationDetails, callback?) {
     if (callback) {
       super.authenticateUser(authDetails, callback);
       return;
@@ -74,6 +77,14 @@ export default class CognitoUserWrapper extends CognitoUser {
     });
   }
 
+  completeNewPasswordChallenge(newPassword: string, requiredAttributeData: any): Promise<CognitoUserSession>;
+  completeNewPasswordChallenge(newPassword: string, requiredAttributeData: any, callback: {
+    onSuccess: (session: CognitoUserSession) => void,
+    onFailure: (err: any) => void,
+    mfaRequired?: (challengeName: any, challengeParameters: any) => void,
+    customChallenge?: (challengeParameters: any) => void,
+  }): void;
+
   /**
    * This method is user to complete the NEW_PASSWORD_REQUIRED challenge.
    * Pass the new password with any new user attributes to be updated.
@@ -88,14 +99,7 @@ export default class CognitoUserWrapper extends CognitoUser {
    * @param {authSuccess} callback.onSuccess Called on success with the new session.
    * @returns {void}
    */
-  completeNewPasswordChallenge(newPassword: string,
-                               requiredAttributeData: any,
-                               callback?: {
-                                 onSuccess: (session: CognitoUserSession) => void,
-                                 onFailure: (err: any) => void,
-                                 mfaRequired?: (challengeName: any, challengeParameters: any) => void,
-                                 customChallenge?: (challengeParameters: any) => void,
-                               }): Promise<CognitoUserSession> | void {
+  completeNewPasswordChallenge(newPassword: string, requiredAttributeData: any, callback?) {
     if (callback) {
       super.completeNewPasswordChallenge(newPassword, requiredAttributeData, callback);
       return;
@@ -113,6 +117,9 @@ export default class CognitoUserWrapper extends CognitoUser {
     });
   }
 
+  confirmRegistration(confirmationCode: string, forceAliasCreation: boolean): Promise<string>;
+  confirmRegistration(confirmationCode: string, forceAliasCreation: boolean, callback: NodeCallback<any, string>): void;
+
   /**
    * This is used for a certain user to confirm the registration by using a confirmation code
    * @param {string} confirmationCode Code entered by user.
@@ -120,7 +127,7 @@ export default class CognitoUserWrapper extends CognitoUser {
    * @param {nodeCallback<string>} callback Called on success or error.
    * @returns {void}
    */
-  confirmRegistration(confirmationCode: string, forceAliasCreation: boolean, callback?: NodeCallback<any, string>): Promise<string> | void {
+  confirmRegistration(confirmationCode: string, forceAliasCreation: boolean, callback?: NodeCallback<any, string>) {
     if (callback) {
       super.confirmRegistration(confirmationCode, forceAliasCreation, callback);
       return;
@@ -128,6 +135,9 @@ export default class CognitoUserWrapper extends CognitoUser {
 
     return promisify(super.confirmRegistration)(confirmationCode, forceAliasCreation);
   }
+
+  sendCustomChallengeAnswer(answerChallenge: any): Promise<any>;
+  sendCustomChallengeAnswer(answerChallenge: any, callback?: NodeCallback<any, any>): void;
 
   /**
    * This is used by the user once he has the responses to a custom challenge
@@ -139,7 +149,7 @@ export default class CognitoUserWrapper extends CognitoUser {
    * @param {authSuccess} callback.onSuccess Called on success with the new session.
    * @returns {void}
    */
-  sendCustomChallengeAnswer(answerChallenge: any, callback?: NodeCallback<any, any>): Promise<any> | void {
+  sendCustomChallengeAnswer(answerChallenge: any, callback?: NodeCallback<any, any>) {
     if (callback) {
       super.sendCustomChallengeAnswer(answerChallenge, callback);
       return;
@@ -147,6 +157,9 @@ export default class CognitoUserWrapper extends CognitoUser {
 
     return promisify(super.sendCustomChallengeAnswer)(answerChallenge);
   }
+
+  sendMFACode(confirmationCode: string, callback: null, mfaType: string): Promise<CognitoUserSession>;
+  sendMFACode(confirmationCode: string, callback: { onSuccess: (session: CognitoUserSession) => void, onFailure: (err: any) => void }, mfaType: string): void;
 
   /**
    * This is used by the user once he has an MFA code
@@ -157,7 +170,7 @@ export default class CognitoUserWrapper extends CognitoUser {
    * @param {authSuccess} callback.onSuccess Called on success with the new session.
    * @returns {void}
    */
-  sendMFACode(confirmationCode: string, callback: { onSuccess: (session: CognitoUserSession) => void, onFailure: (err: any) => void } | null, mfaType: string): Promise<CognitoUserSession> | void {
+  sendMFACode(confirmationCode: string, callback, mfaType: string) {
     if (callback) {
       super.sendMFACode(confirmationCode, callback, mfaType);
       return;
@@ -173,6 +186,9 @@ export default class CognitoUserWrapper extends CognitoUser {
     });
   }
 
+  changePassword(oldUserPassword: string, newUserPassword: string): Promise<"SUCCESS">;
+  changePassword(oldUserPassword: string, newUserPassword: string, callback: NodeCallback<Error, "SUCCESS">): void;
+
   /**
    * This is used by an authenticated user to change the current password
    * @param {string} oldUserPassword The current password.
@@ -180,7 +196,7 @@ export default class CognitoUserWrapper extends CognitoUser {
    * @param {nodeCallback<string>} callback Called on success or error.
    * @returns {void}
    */
-  changePassword(oldUserPassword: string, newUserPassword: string, callback?: NodeCallback<Error, "SUCCESS">): Promise<"SUCCESS"> | void {
+  changePassword(oldUserPassword: string, newUserPassword: string, callback?: NodeCallback<Error, "SUCCESS">) {
     if (callback) {
       super.changePassword(oldUserPassword, newUserPassword, callback);
       return;
@@ -189,12 +205,15 @@ export default class CognitoUserWrapper extends CognitoUser {
     return promisify(super.changePassword)(oldUserPassword, newUserPassword);
   }
 
+  enableMFA(): Promise<string>;
+  enableMFA(callback: NodeCallback<Error, string>): void;
+
   /**
    * This is used by an authenticated user to enable MFA for himself
    * @param {nodeCallback<string>} callback Called on success or error.
    * @returns {void}
    */
-  enableMFA(callback?: NodeCallback<Error, string>): Promise<string> | void {
+  enableMFA(callback?: NodeCallback<Error, string>) {
     if (callback) {
       super.enableMFA(callback);
       return;
@@ -203,12 +222,15 @@ export default class CognitoUserWrapper extends CognitoUser {
     return promisify(super.enableMFA)();
   }
 
+  disableMFA(): Promise<string>;
+  disableMFA(callback: NodeCallback<Error, string>): void;
+
   /**
    * This is used by an authenticated user to disable MFA for himself
    * @param {nodeCallback<string>} callback Called on success or error.
    * @returns {void}
    */
-  disableMFA(callback?: NodeCallback<Error, string>): Promise<string> | void {
+  disableMFA(callback?: NodeCallback<Error, string>) {
     if (callback) {
       super.disableMFA(callback);
       return;
@@ -217,12 +239,15 @@ export default class CognitoUserWrapper extends CognitoUser {
     return promisify(super.disableMFA)();
   }
 
+  deleteUser(): Promise<string>;
+  deleteUser(callback: NodeCallback<Error, string>): void;
+
   /**
    * This is used by an authenticated user to delete himself
    * @param {nodeCallback<string>} callback Called on success or error.
    * @returns {void}
    */
-  deleteUser(callback?: NodeCallback<Error, string>): Promise<string> | void {
+  deleteUser(callback?: NodeCallback<Error, string>) {
     if (callback) {
       super.deleteUser(callback);
       return;
@@ -230,6 +255,9 @@ export default class CognitoUserWrapper extends CognitoUser {
 
     return promisify(super.deleteUser)();
   }
+
+  updateAttributes(attributes: ICognitoUserAttributeData[]): Promise<string>;
+  updateAttributes(attributes: ICognitoUserAttributeData[], callback: NodeCallback<Error, string>): void;
 
   /**
    * @typedef {CognitoUserAttribute | { Name:string, Value:string }} AttributeArg
@@ -240,7 +268,7 @@ export default class CognitoUserWrapper extends CognitoUser {
    * @param {nodeCallback<string>} callback Called on success or error.
    * @returns {void}
    */
-  updateAttributes(attributes: ICognitoUserAttributeData[], callback?: NodeCallback<Error, string>): Promise<string> | void {
+  updateAttributes(attributes: ICognitoUserAttributeData[], callback?: NodeCallback<Error, string>) {
     if (callback) {
       super.updateAttributes(attributes, callback);
       return;
@@ -249,12 +277,15 @@ export default class CognitoUserWrapper extends CognitoUser {
     return promisify(super.updateAttributes)(attributes);
   }
 
+  getUserAttributes(): Promise<CognitoUserAttribute[]>;
+  getUserAttributes(callback: NodeCallback<Error, CognitoUserAttribute[]>): void;
+
   /**
    * This is used by an authenticated user to get a list of attributes
    * @param {nodeCallback<CognitoUserAttribute[]>} callback Called on success or error.
    * @returns {void}
    */
-  getUserAttributes(callback?: NodeCallback<Error, CognitoUserAttribute[]>): Promise<CognitoUserAttribute[]> | void {
+  getUserAttributes(callback?: NodeCallback<Error, CognitoUserAttribute[]>) {
     if (callback) {
       super.getUserAttributes(callback);
       return;
@@ -262,6 +293,9 @@ export default class CognitoUserWrapper extends CognitoUser {
 
     return promisify(super.getUserAttributes)();
   }
+
+  getMFAOptions(): Promise<MFAOption[]>;
+  getMFAOptions(callback: NodeCallback<Error, MFAOption[]>): void;
 
   /**
    * This is used by an authenticated user to get the MFAOptions
@@ -277,13 +311,16 @@ export default class CognitoUserWrapper extends CognitoUser {
     return promisify(super.getMFAOptions)();
   }
 
+  deleteAttributes(attributeList: string[]): Promise<string>;
+  deleteAttributes(attributeList: string[], callback: NodeCallback<Error, string>): void;
+
   /**
    * This is used by an authenticated user to delete a list of attributes
    * @param {string[]} attributeList Names of the attributes to delete.
    * @param {nodeCallback<string>} callback Called on success or error.
    * @returns {void}
    */
-  deleteAttributes(attributeList: string[], callback: NodeCallback<Error, string>): Promise<string> | void {
+  deleteAttributes(attributeList: string[], callback?: NodeCallback<Error, string>): Promise<string> | void {
     if (callback) {
       super.deleteAttributes(attributeList, callback);
       return;
@@ -292,12 +329,15 @@ export default class CognitoUserWrapper extends CognitoUser {
     return promisify(super.deleteAttributes)(attributeList);
   }
 
+  resendConfirmationCode(): Promise<"SUCCESS">;
+  resendConfirmationCode(callback: NodeCallback<Error, "SUCCESS">): void;
+
   /**
    * This is used by a user to resend a confirmation code
    * @param {nodeCallback<string>} callback Called on success or error.
    * @returns {void}
    */
-  resendConfirmationCode(callback?: NodeCallback<Error, "SUCCESS">): Promise<"SUCCESS"> | void {
+  resendConfirmationCode(callback?: NodeCallback<Error, "SUCCESS">) {
     if (callback) {
       super.resendConfirmationCode(callback);
       return;
@@ -305,6 +345,9 @@ export default class CognitoUserWrapper extends CognitoUser {
 
     return promisify(super.resendConfirmationCode)();
   }
+
+  getSession(): Promise<CognitoUserSession>;
+  getSession(callback: () => {}): void;
 
   /**
    * This is used to get a session, either from the session object
@@ -314,7 +357,7 @@ export default class CognitoUserWrapper extends CognitoUser {
    * @returns {void}
    */
   // tslint:disable-next-line
-  getSession(callback?: Function): Promise<CognitoUserSession> | void {
+  getSession(callback?) {
     if (callback) {
       super.getSession(callback);
       return;
@@ -323,13 +366,16 @@ export default class CognitoUserWrapper extends CognitoUser {
     return promisify(super.getSession)();
   }
 
+  refreshSession(refreshToken: CognitoRefreshToken): Promise<CognitoUserSession>;
+  refreshSession(refreshToken: CognitoRefreshToken, callback: NodeCallback<Error, CognitoUserSession>): void;
+
   /**
    * This uses the refreshToken to retrieve a new session
    * @param {CognitoRefreshToken} refreshToken A previous session's refresh token.
    * @param {nodeCallback<CognitoUserSession>} callback Called on success or error.
    * @returns {void}
    */
-  refreshSession(refreshToken: CognitoRefreshToken, callback?: NodeCallback<Error, CognitoUserSession>): Promise<CognitoUserSession> | void {
+  refreshSession(refreshToken: CognitoRefreshToken, callback?: NodeCallback<Error, CognitoUserSession>) {
     if (callback) {
       super.refreshSession(refreshToken, callback);
       return;
@@ -337,6 +383,9 @@ export default class CognitoUserWrapper extends CognitoUser {
 
     return promisify(super.refreshSession)(refreshToken);
   }
+
+  forgotPassword(): Promise<any>;
+  forgotPassword(callback: { onSuccess: (data: any) => void, onFailure: (err: Error) => void, inputVerificationCode?: (data: any) => void }): void;
 
   /**
    * This is used to initiate a forgot password request
@@ -347,7 +396,7 @@ export default class CognitoUserWrapper extends CognitoUser {
    * @param {onSuccess} callback.onSuccess Called on success.
    * @returns {void}
    */
-  forgotPassword(callback?: { onSuccess: (data: any) => void, onFailure: (err: Error) => void, inputVerificationCode?: (data: any) => void }): Promise<any> | void {
+  forgotPassword(callback?) {
     if (callback) {
       super.forgotPassword(callback);
       return;
@@ -364,6 +413,9 @@ export default class CognitoUserWrapper extends CognitoUser {
     });
   }
 
+  confirmPassword(confirmationCode: string, newPassword: string): Promise<void>;
+  confirmPassword(confirmationCode: string, newPassword: string, callback: { onSuccess: () => void, onFailure: (err: Error) => void }): void;
+
   /**
    * This is used to confirm a new password using a confirmationCode
    * @param {string} confirmationCode Code entered by user.
@@ -373,7 +425,7 @@ export default class CognitoUserWrapper extends CognitoUser {
    * @param {onSuccess<void>} callback.onSuccess Called on success.
    * @returns {void}
    */
-  confirmPassword(confirmationCode: string, newPassword: string, callback?: { onSuccess: () => void, onFailure: (err: Error) => void }): Promise<void> | void {
+  confirmPassword(confirmationCode: string, newPassword: string, callback?) {
     if (callback) {
       super.confirmPassword(confirmationCode, newPassword, callback);
       return;
@@ -389,6 +441,9 @@ export default class CognitoUserWrapper extends CognitoUser {
     });
   }
 
+  getAttributeVerificationCode(attributeName: string): Promise<string | void>;
+  getAttributeVerificationCode(attributeName: string, callback: { onSuccess: () => void, onFailure: (err: Error) => void, inputVerificationCode: (data: string) => void }): void;
+
   /**
    * This is used to initiate an attribute confirmation request
    * @param {string} attributeName User attribute that needs confirmation.
@@ -397,7 +452,7 @@ export default class CognitoUserWrapper extends CognitoUser {
    * @param {inputVerificationCode} callback.inputVerificationCode Called on success.
    * @returns {void}
    */
-  getAttributeVerificationCode(attributeName: string, callback?: { onSuccess: () => void, onFailure: (err: Error) => void, inputVerificationCode: (data: string) => void }): Promise<string | void> | void {
+  getAttributeVerificationCode(attributeName: string, callback?) {
     if (callback) {
       super.getAttributeVerificationCode(attributeName, callback);
       return;
@@ -414,6 +469,9 @@ export default class CognitoUserWrapper extends CognitoUser {
     });
   }
 
+  verifyAttribute(attributeName: string, confirmationCode: string): Promise<string>;
+  verifyAttribute(attributeName: string, confirmationCode: string, callback: { onSuccess: (success: string) => void, onFailure: (err: Error) => void }): void;
+
   /**
    * This is used to confirm an attribute using a confirmation code
    * @param {string} attributeName Attribute being confirmed.
@@ -423,7 +481,7 @@ export default class CognitoUserWrapper extends CognitoUser {
    * @param {onSuccess<string>} callback.onSuccess Called on success.
    * @returns {void}
    */
-  verifyAttribute(attributeName: string, confirmationCode: string, callback?: { onSuccess: (success: string) => void, onFailure: (err: Error) => void }): Promise<string> | void {
+  verifyAttribute(attributeName: string, confirmationCode: string, callback?) {
     if (callback) {
       super.verifyAttribute(attributeName, confirmationCode, callback);
       return;
@@ -439,6 +497,9 @@ export default class CognitoUserWrapper extends CognitoUser {
     });
   }
 
+  getDevice(): Promise<string>;
+  getDevice(callback: { onSuccess: (success: string) => void, onFailure: (err: Error) => void }): void;
+
   /**
    * This is used to get the device information using the current device key
    * @param {object} callback Result callback map.
@@ -446,7 +507,7 @@ export default class CognitoUserWrapper extends CognitoUser {
    * @param {onSuccess<*>} callback.onSuccess Called on success with device data.
    * @returns {void}
    */
-  getDevice(callback?: { onSuccess: (success: string) => void, onFailure: (err: Error) => void }): Promise<string> | void {
+  getDevice(callback?) {
     if (callback) {
       super.getDevice(callback);
       return;
@@ -462,6 +523,9 @@ export default class CognitoUserWrapper extends CognitoUser {
     });
   }
 
+  setDeviceStatusRemembered(): Promise<string>;
+  setDeviceStatusRemembered(callback: { onSuccess: (success: string) => void, onFailure: (err: any) => void }): void;
+
   /**
    * This is used to set the device status as remembered
    * @param {object} callback Result callback map.
@@ -469,7 +533,7 @@ export default class CognitoUserWrapper extends CognitoUser {
    * @param {onSuccess<string>} callback.onSuccess Called on success.
    * @returns {void}
    */
-  setDeviceStatusRemembered(callback?: { onSuccess: (success: string) => void, onFailure: (err: any) => void }): Promise<string> | void {
+  setDeviceStatusRemembered(callback?) {
     if (callback) {
       super.setDeviceStatusRemembered(callback);
       return;
@@ -485,6 +549,9 @@ export default class CognitoUserWrapper extends CognitoUser {
     });
   }
 
+  setDeviceStatusNotRemembered(): Promise<string>;
+  setDeviceStatusNotRemembered(callback: { onSuccess: (success: string) => void, onFailure: (err: any) => void }): void;
+
   /**
    * This is used to set the device status as not remembered
    * @param {object} callback Result callback map.
@@ -492,7 +559,7 @@ export default class CognitoUserWrapper extends CognitoUser {
    * @param {onSuccess<string>} callback.onSuccess Called on success.
    * @returns {void}
    */
-  setDeviceStatusNotRemembered(callback?: { onSuccess: (success: string) => void, onFailure: (err: any) => void }): Promise<string> | void {
+  setDeviceStatusNotRemembered(callback?) {
     if (callback) {
       super.setDeviceStatusNotRemembered(callback);
       return;
@@ -508,6 +575,9 @@ export default class CognitoUserWrapper extends CognitoUser {
     });
   }
 
+  listDevices(limit: number, paginationToken: string): Promise<any>;
+  listDevices(limit: number, paginationToken: string, callback: { onSuccess: (data: any) => void, onFailure: (err: Error) => void }): void;
+
   /**
    * This is used to list all devices for a user
    *
@@ -518,7 +588,7 @@ export default class CognitoUserWrapper extends CognitoUser {
    * @param {onSuccess<*>} callback.onSuccess Called on success with device list.
    * @returns {void}
    */
-  listDevices(limit: number, paginationToken: string, callback?: { onSuccess: (data: any) => void, onFailure: (err: Error) => void }): Promise<any> | void {
+  listDevices(limit: number, paginationToken: string, callback?) {
     if (callback) {
       super.listDevices(limit, paginationToken, callback);
       return;
@@ -534,6 +604,9 @@ export default class CognitoUserWrapper extends CognitoUser {
     });
   }
 
+  globalSignOut(): Promise<string>;
+  globalSignOut(callback: { onSuccess: (msg: string) => void, onFailure: (err: Error) => void }): void;
+
   /**
    * This is used to globally revoke all tokens issued to a user
    * @param {object} callback Result callback map.
@@ -541,7 +614,7 @@ export default class CognitoUserWrapper extends CognitoUser {
    * @param {onSuccess<string>} callback.onSuccess Called on success.
    * @returns {void}
    */
-  globalSignOut(callback?: { onSuccess: (msg: string) => void, onFailure: (err: Error) => void }): Promise<string> | void {
+  globalSignOut(callback?) {
     if (callback) {
       super.globalSignOut(callback);
       return;
@@ -557,15 +630,18 @@ export default class CognitoUserWrapper extends CognitoUser {
     });
   }
 
+  associateSoftwareToken(): Promise<string>;
+  associateSoftwareToken(callback: {
+    associateSecretCode: (secretCode: string) => void,
+    onFailure: (err: any) => void,
+  }): void;
+
   /**
    * This is used by an authenticated or a user trying to authenticate to associate a TOTP MFA
    * @param {nodeCallback<string>} callback Called on success or error.
    * @returns {void}
    */
-  associateSoftwareToken(callback?: {
-    associateSecretCode: (secretCode: string) => void,
-    onFailure: (err: any) => void,
-  }): Promise<string> | void {
+  associateSoftwareToken(callback?) {
     if (callback) {
       super.associateSoftwareToken(callback);
       return;
@@ -581,6 +657,9 @@ export default class CognitoUserWrapper extends CognitoUser {
     });
   }
 
+  verifySoftwareToken(totpCode, friendlyDeviceName): Promise<CognitoUserSession>;
+  verifySoftwareToken(totpCode, friendlyDeviceName, callback: { onSuccess: (session: CognitoUserSession) => void, onFailure: (err: Error) => void }): void;
+
   /**
    * This is used by an authenticated or a user trying to authenticate to verify a TOTP MFA
    * @param {string} totpCode The MFA code entered by the user.
@@ -588,7 +667,7 @@ export default class CognitoUserWrapper extends CognitoUser {
    * @param {nodeCallback<string>} callback Called on success or error.
    * @returns {void}
    */
-  verifySoftwareToken(totpCode, friendlyDeviceName, callback?: {onSuccess: (session: CognitoUserSession) => void, onFailure: (err: Error) => void}): Promise<CognitoUserSession> | void {
+  verifySoftwareToken(totpCode, friendlyDeviceName, callback?) {
     if (callback) {
       super.verifySoftwareToken(totpCode, friendlyDeviceName, callback);
       return;
