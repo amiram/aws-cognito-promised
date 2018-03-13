@@ -363,7 +363,7 @@ export default class CognitoUserWrapper extends CognitoUser {
       return;
     }
 
-    return promisify(super.getSession)();
+    return promisify(super.getSession, {context: this})();
   }
 
   refreshSession(refreshToken: CognitoRefreshToken): Promise<CognitoUserSession>;
