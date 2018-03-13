@@ -1,5 +1,11 @@
-import {CognitoUserAttribute, CognitoUserPool, ISignUpResult, NodeCallback} from "amazon-cognito-identity-js";
+import {
+  CognitoUserAttribute,
+  CognitoUserPool,
+  ISignUpResult,
+  NodeCallback,
+} from "amazon-cognito-identity-js";
 import CognitoUserWrapper from "./cognito-user";
+
 const {promisify} = require("bluebird");
 
 export default class CognitoUserPoolWrapper extends CognitoUserPool {
@@ -44,8 +50,15 @@ export default class CognitoUserPoolWrapper extends CognitoUserPool {
     return promisify(super.signUp)(username, password, userAttributes, validationData);
   }
 
-  getCurrentUser(): CognitoUserWrapper {
+  getCurrentUser(): CognitoUserWrapper | null {
     const currentUser = super.getCurrentUser();
-    return Object.assign(currentUser, new CognitoUserWrapper(null));
+    if (currentUser) {
+      return Object.assign(currentUser, new CognitoUserWrapper({
+        Username: currentUser.getUsername(),
+        Pool: this,
+      }));
+    } else {
+      return null;
+    }
   }
 }

@@ -15,5 +15,5 @@ export default class CognitoUserPoolWrapper extends CognitoUserPool {
     constructor(data: any);
     signUp(username: string, password: string, userAttributes: CognitoUserAttribute[], validationData: CognitoUserAttribute[]): Promise<ISignUpResult>;
     signUp(username: string, password: string, userAttributes: CognitoUserAttribute[], validationData: CognitoUserAttribute[], callback: NodeCallback<Error, ISignUpResult>): void;
-    getCurrentUser(): CognitoUserWrapper;
+    getCurrentUser(): CognitoUserWrapper | null;
 }
